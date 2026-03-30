@@ -2,6 +2,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef, useState } from "react";
 import { ExternalLink, Github, X } from "lucide-react";
+import  DB_kaayScanner from "@/assets/screen-kaayScanner.png";
+import DB_gestion_scolarite from "@/assets/Db_gestion_scolaire.png";
+import DB_gestion_banque from "@/assets/DB_gestion_banque.png";
 
 const projects = [
   {
@@ -11,31 +14,34 @@ const projects = [
     fullDescription: "Kaay Scanner est une plateforme web innovante dédiée à la digitalisation et à la gestion des entreprises locales, notamment les restaurants, pâtisseries et autres commerces au Sénégal",
     tags: ["React + TypeScript", "Node.js avec Express", "ShadCN + Tailwind CSS","Resend.com pour les emails transactionnels"],
     color: "from-green-500/20 to-green-500/5",
-    image: "🛍️",
+    image: DB_kaayScanner,
+    isImage: true,
     liveUrl: "https://kaayscanner.com",
     githubUrl: "https://github.com/MSG-G/projet-kaay-scanne",
   },
   {
-    title: "Dashboard Analytics",
+    title: "Gestion Scolarite",
     category: "SaaS",
-    description: "Tableau de bord interactif pour visualiser les données marketing en temps réel.",
-    fullDescription: "Solution SaaS complète permettant aux équipes marketing de visualiser leurs KPIs en temps réel. Inclut des graphiques interactifs avec D3.js, des exports PDF automatisés, des alertes personnalisables et une API RESTful pour l'intégration avec d'autres outils.",
-    tags: ["TypeScript", "D3.js", "PostgreSQL"],
+    description: "Application est une plateforme web développée avec Laravel, permettant de gérer efficacement un établissement scolaire.",
+    fullDescription: "Elle intègre des fonctionnalités modernes grâce à Livewire pour une interface dynamique sans rechargement et Jetstream pour une authentification sécurisée.",
+    tags: ["Laravel", "Livewire + Blade + Tailwind CSS", "Jetstream", "PostgreSQL"],
     color: "from-amber-600/20 to-amber-600/5",
-    image: "📊",
-    liveUrl: "https://example.com",
-    githubUrl: "https://github.com",
+    image: DB_gestion_scolarite,
+    isImage: true,
+    liveUrl: "https://github.com/MSG-G/Projet_Gestion_scolarite",
+    githubUrl: "https://github.com/MSG-G/Projet_Gestion_scolarite",
   },
   {
-    title: "App Mobile Fitness",
-    category: "Mobile App",
-    description: "Application de suivi fitness avec programmes personnalisés et intégration Apple Health.",
-    fullDescription: "Application mobile cross-platform développée avec React Native. Elle propose des programmes d'entraînement personnalisés basés sur l'IA, le suivi des performances, l'intégration avec Apple Health et Google Fit, ainsi qu'une communauté sociale pour motiver les utilisateurs.",
-    tags: ["React Native", "Firebase", "AI"],
+    title: "Gestion banque",
+    category: "desktop App",
+    description: "Application de gestion bancaire développée en Java, offrant des fonctionnalités de gestion de comptes, de transactions et de rapports financiers.",
+    fullDescription: "Une application de gestion bancaire moderne développée avec JavaFX (JDK 17), permettant la gestion des clients, des comptes et des opérations bancaires.",
+    tags: ["javafx", "JDK17", "postgres"],
     color: "from-stone-500/20 to-stone-500/5",
-    image: "💪",
-    liveUrl: "https://example.com",
-    githubUrl: "https://github.com",
+    image: DB_gestion_banque,
+    isImage: true,
+    liveUrl: "https://github.com/MSG-G/gestion_banque_javafx",
+    githubUrl: "https://github.com/MSG-G/gestion_banque_javafx",
   },
 ];
 
@@ -83,13 +89,22 @@ const ProjectsSection = () => {
                       className={`aspect-video lg:aspect-auto bg-gradient-to-br ${project.color} flex items-center justify-center overflow-hidden`}
                       whileHover={{ scale: 1.02 }}
                     >
-                      <motion.div 
-                        className="text-6xl"
-                        animate={{ rotate: [0, 5, -5, 0] }}
-                        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                      >
-                        {project.image}
-                      </motion.div>
+                      {project.isImage ? (
+                        <motion.img 
+                          src={project.image}
+                          alt={project.title}
+                          className="w-full h-full object-cover"
+                          whileHover={{ scale: 1.05 }}
+                        />
+                      ) : (
+                        <motion.div 
+                          className="text-6xl "
+                          animate={{ rotate: [0, 5, -5, 0] }}
+                          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                        >
+                          {project.image}
+                        </motion.div>
+                      )}
                     </motion.div>
                     <div className="p-8 lg:p-12 flex flex-col justify-center">
                       <motion.p 
@@ -192,13 +207,24 @@ const ProjectsSection = () => {
               onClick={(e) => e.stopPropagation()}
             >
               <div className={`aspect-video bg-gradient-to-br ${selectedProject.color} flex items-center justify-center relative`}>
-                <motion.div 
-                  className="text-8xl"
-                  animate={{ scale: [1, 1.1, 1], rotate: [0, 5, -5, 0] }}
-                  transition={{ duration: 3, repeat: Infinity }}
-                >
-                  {selectedProject.image}
-                </motion.div>
+                {selectedProject.isImage ? (
+                  <motion.img 
+                    src={selectedProject.image}
+                    alt={selectedProject.title}
+                    className="w-full h-full object-cover"
+                    initial={{ scale: 0.9 }}
+                    animate={{ scale: 1 }}
+                    transition={{ duration: 0.5 }}
+                  />
+                ) : (
+                  <motion.div 
+                    className="text-8xl"
+                    animate={{ scale: [1, 1.1, 1], rotate: [0, 5, -5, 0] }}
+                    transition={{ duration: 3, repeat: Infinity }}
+                  >
+                    {selectedProject.image}
+                  </motion.div>
+                )}
                 <motion.button
                   className="absolute top-4 right-4 w-10 h-10 bg-background/90 rounded-full flex items-center justify-center hover:bg-background transition-colors"
                   whileHover={{ scale: 1.1 }}

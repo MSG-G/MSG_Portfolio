@@ -69,8 +69,8 @@ const AboutSection = () => {
               transition={{ duration: 0.5, delay: 0.6 }}
               whileHover={{ scale: 1.05, rotate: 2 }}
             >
-              <p className="text-3xl font-display font-bold text-gradient">10+</p>
-              <p className="text-sm text-muted-foreground">Projets réalisés</p>
+              <p className="text-3xl font-display font-bold text-gradient">100%</p>
+              <p className="text-sm text-muted-foreground">Engagement & Passion</p>
             </motion.div>
           </motion.div>
         </div>
