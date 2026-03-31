@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
-import developerImage from "@/assets/profil.jpeg";
+import developImage from "@/assets/profil.jpeg";
+import { OptimizedImage } from "@/components/ui/optimized-image";
 
 const AboutSection = () => {
   const ref = useRef(null);
@@ -52,15 +53,18 @@ const AboutSection = () => {
               whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.3 }}
             >
-              <motion.img 
-                src={developerImage} 
-                alt="Développeur" 
-                className="w-full h-full object-cover"
+              <motion.div
                 initial={{ scale: 1.1 }}
                 animate={isInView ? { scale: 1 } : {}}
                 transition={{ duration: 1.2, ease: "easeOut" }}
                 whileHover={{ scale: 1.05 }}
-              />
+              >
+                <OptimizedImage 
+                  src={developImage} 
+                  alt="Développeur" 
+                  className="w-full h-full object-cover"
+                />
+              </motion.div>
             </motion.div>
             <motion.div 
               className="absolute -bottom-6 -left-6 bg-card p-6 rounded-xl shadow-lg border border-border"

@@ -5,6 +5,7 @@ import { ExternalLink, Github, X } from "lucide-react";
 import  DB_kaayScanner from "@/assets/screen-kaayScanner.png";
 import DB_gestion_scolarite from "@/assets/Db_gestion_scolaire.png";
 import DB_gestion_banque from "@/assets/DB_gestion_banque.png";
+import { OptimizedImage } from "@/components/ui/optimized-image";
 
 const projects = [
   {
@@ -90,12 +91,13 @@ const ProjectsSection = () => {
                       whileHover={{ scale: 1.02 }}
                     >
                       {project.isImage ? (
-                        <motion.img 
-                          src={project.image}
-                          alt={project.title}
-                          className="w-full h-full object-cover"
-                          whileHover={{ scale: 1.05 }}
-                        />
+                        <motion.div whileHover={{ scale: 1.05 }}>
+                          <OptimizedImage 
+                            src={project.image}
+                            alt={project.title}
+                            className="w-full h-full object-cover"
+                          />
+                        </motion.div>
                       ) : (
                         <motion.div 
                           className="text-6xl "
@@ -208,14 +210,17 @@ const ProjectsSection = () => {
             >
               <div className={`aspect-video bg-gradient-to-br ${selectedProject.color} flex items-center justify-center relative`}>
                 {selectedProject.isImage ? (
-                  <motion.img 
-                    src={selectedProject.image}
-                    alt={selectedProject.title}
-                    className="w-full h-full object-cover"
+                  <motion.div
                     initial={{ scale: 0.9 }}
                     animate={{ scale: 1 }}
                     transition={{ duration: 0.5 }}
-                  />
+                  >
+                    <OptimizedImage 
+                      src={selectedProject.image}
+                      alt={selectedProject.title}
+                      className="w-full h-full object-cover"
+                    />
+                  </motion.div>
                 ) : (
                   <motion.div 
                     className="text-8xl"
