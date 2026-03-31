@@ -46,20 +46,34 @@ const ContactSection = () => {
     setIsSubmitting(true);
 
     try {
+      // Validation supplémentaire côté client
+      if (!formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+        throw new Error("Format d'email invalide");
+      }
+
       const response = await fetch("https://formspree.io/f/mdapeyww", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          message: formData.message,
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          message: formData.message.trim(),
         }),
       });
 
+      // Gestion détaillée des codes d'erreur
+      if (response.status === 422) {
+        throw new Error("Données de formulaire invalides. Veuillez vérifier vos informations.");
+      }
+
+      if (response.status >= 500) {
+        throw new Error("Le serveur est temporairement indisponible. Veuillez réessayer plus tard.");
+      }
+
       if (!response.ok) {
-        throw new Error("Échec de l'envoi du message");
+        throw new Error(`Erreur lors de l'envoi (${response.status}). Veuillez réessayer.");
       }
 
       setIsSubmitted(true);
@@ -69,10 +83,13 @@ const ContactSection = () => {
       });
 
       setFormData({ name: "", email: "", message: "" });
+      setErrors({});
     } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Une erreur inconnue s'est produite";
+      console.error("Form submission error:", err);
       toast({
         title: "Erreur lors de l'envoi",
-        description: "Impossible d'envoyer le message. Veuillez réessayer plus tard.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -236,8 +253,11 @@ const ContactSection = () => {
                       animate={isInView ? { opacity: 1, y: 0 } : {}}
                       transition={{ delay: 0.3 }}
                     >
-                      <label className="block text-sm font-medium text-foreground mb-2">Nom</label>
+                      <label htmlFor="name" className="block text-sm font-medium text-foreground mb-2">
+                        Nom <span className="text-destructive">*</span>
+                      </label>
                       <motion.input
+                        id="name"
                         type="text"
                         name="name"
                         value={formData.name}
@@ -247,14 +267,20 @@ const ContactSection = () => {
                         className={inputClasses("name")}
                         placeholder="Votre nom"
                         whileFocus={{ scale: 1.01 }}
+                        required
+                        aria-required="true"
+                        aria-invalid={!!errors.name}
+                        aria-describedby={errors.name ? "name-error" : undefined}
                       />
                       <AnimatePresence>
                         {errors.name && (
                           <motion.p
+                            id="name-error"
                             initial={{ opacity: 0, y: -10 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -10 }}
                             className="text-destructive text-sm mt-1"
+                            role="alert"
                           >
                             {errors.name}
                           </motion.p>
@@ -267,8 +293,11 @@ const ContactSection = () => {
                       animate={isInView ? { opacity: 1, y: 0 } : {}}
                       transition={{ delay: 0.4 }}
                     >
-                      <label className="block text-sm font-medium text-foreground mb-2">Email</label>
+                      <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
+                        Email <span className="text-destructive">*</span>
+                      </label>
                       <motion.input
+                        id="email"
                         type="email"
                         name="email"
                         value={formData.email}
@@ -278,14 +307,20 @@ const ContactSection = () => {
                         className={inputClasses("email")}
                         placeholder="votre@email.com"
                         whileFocus={{ scale: 1.01 }}
+                        required
+                        aria-required="true"
+                        aria-invalid={!!errors.email}
+                        aria-describedby={errors.email ? "email-error" : undefined}
                       />
                       <AnimatePresence>
                         {errors.email && (
                           <motion.p
+                            id="email-error"
                             initial={{ opacity: 0, y: -10 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -10 }}
                             className="text-destructive text-sm mt-1"
+                            role="alert"
                           >
                             {errors.email}
                           </motion.p>
@@ -298,9 +333,13 @@ const ContactSection = () => {
                       animate={isInView ? { opacity: 1, y: 0 } : {}}
                       transition={{ delay: 0.5 }}
                     >
-                      <label className="block text-sm font-medium text-foreground mb-2">Message</label>
+                      <label htmlFor="message" className="block text-sm font-medium text-foreground mb-2">
+                        Message <span className="text-destructive">*</span>
+                      </label>
                       <motion.textarea
+                        id="message"
                         name="message"
+                        required
                         rows={5}
                         value={formData.message}
                         onChange={handleChange}
@@ -309,14 +348,19 @@ const ContactSection = () => {
                         className={`${inputClasses("message")} resize-none`}
                         placeholder="Décrivez votre projet..."
                         whileFocus={{ scale: 1.01 }}
+                        aria-required="true"
+                        aria-invalid={!!errors.message}
+                        aria-describedby={errors.message ? "message-error" : undefined}
                       />
                       <AnimatePresence>
                         {errors.message && (
                           <motion.p
+                            id="message-error"
                             initial={{ opacity: 0, y: -10 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -10 }}
                             className="text-destructive text-sm mt-1"
+                            role="alert"
                           >
                             {errors.message}
                           </motion.p>
