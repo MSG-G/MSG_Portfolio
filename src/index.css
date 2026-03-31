@@ -5,6 +5,12 @@
 @tailwind utilities;
 
 @layer base {
+  /* Prevent layout shift from scrollbar appearing/disappearing */
+  html {
+    scrollbar-gutter: stable;
+    overflow-y: scroll;
+  }
+
   :root {
     --background: 40 15% 96%;
     --foreground: 30 10% 12%;
