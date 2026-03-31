@@ -73,7 +73,7 @@ const ContactSection = () => {
       }
 
       if (!response.ok) {
-        throw new Error(`Erreur lors de l'envoi (${response.status}). Veuillez réessayer.");
+        throw new Error(`Erreur lors de l'envoi (${response.status}). Veuillez réessayer.`);
       }
 
       setIsSubmitted(true);
@@ -101,8 +101,8 @@ const ContactSection = () => {
   const inputClasses = (fieldName: string) => `
     w-full rounded-xl px-4 py-3.5 transition-all duration-300
     bg-card dark:bg-card/50 
-    border-2 
-    ${errors[fieldName] 
+    border-2 "
+    ${errors[fieldName]
       ? "border-destructive" 
       : focusedField === fieldName 
         ? "border-primary shadow-lg shadow-primary/20" 
@@ -110,7 +110,7 @@ const ContactSection = () => {
     }
     text-foreground placeholder:text-muted-foreground
     focus:outline-none focus:border-primary focus:shadow-lg focus:shadow-primary/20
-  `;
+    `.trim();
 
   return (
     <section id="contact" className="py-32 px-6 bg-secondary dark:bg-background" ref={ref}>
