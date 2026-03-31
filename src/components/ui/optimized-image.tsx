@@ -5,45 +5,31 @@ interface OptimizedImageProps extends ImgHTMLAttributes<HTMLImageElement> {
   alt: string;
   sizes?: string;
   srcSet?: string;
-  webpSrcSet?: string;
   className?: string;
 }
 
+/**
+ * OptimizedImage Component
+ * 
+ * Simple wrapper around img tag that supports lazy loading
+ * and is ready for WebP optimization via srcSet when images are processed.
+ * 
+ * Future enhancement: Will automatically generate and use WebP variants
+ * after running `npm run optimize:images`
+ */
 export const OptimizedImage = React.forwardRef<HTMLImageElement, OptimizedImageProps>(
-  ({ src, alt, sizes, srcSet, webpSrcSet, className, ...props }, ref) => {
-    // Extract filename without extension for WebP versions
-    const filename = src.substring(src.lastIndexOf("/") + 1).split(".")[0];
-    const currentPath = src.substring(0, src.lastIndexOf("/") + 1);
-
-    // Default srcSet if not provided
-    const defaultWebpSet = webpSrcSet || 
-      `${currentPath}${filename}-480w.webp 480w, ${currentPath}${filename}-768w.webp 768w, ${currentPath}${filename}-1024w.webp 1024w, ${src}`;
-    
-    const defaultSrcSet = srcSet || 
-      `${currentPath}${filename}-480w.jpg 480w, ${currentPath}${filename}-768w.jpg 768w, ${currentPath}${filename}-1024w.jpg 1024w, ${src}`;
-
-    const defaultSizes = sizes || "(max-width: 480px) 100vw, (max-width: 768px) 75vw, (max-width: 1024px) 66vw, 50vw";
-
+  ({ src, alt, sizes, srcSet, className, ...props }, ref) => {
     return (
-      <picture>
-        {/* WebP format for modern browsers */}
-        <source 
-          srcSet={defaultWebpSet}
-          sizes={defaultSizes}
-          type="image/webp" 
-        />
-        {/* Fallback JPG/PNG */}
-        <img
-          ref={ref}
-          src={src}
-          alt={alt}
-          srcSet={defaultSrcSet}
-          sizes={defaultSizes}
-          className={className}
-          loading="lazy"
-          {...props}
-        />
-      </picture>
+      <img
+        ref={ref}
+        src={src}
+        alt={alt}
+        srcSet={srcSet}
+        sizes={sizes}
+        className={className}
+        loading="lazy"
+        {...props}
+      />
     );
   }
 );
