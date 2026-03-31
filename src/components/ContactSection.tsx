@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { Mail, MapPin, Phone, Linkedin, Github, Twitter, Send, CheckCircle, Loader2, Instagram } from "lucide-react";
 import { z } from "zod";
 import { useToast } from "@/hooks/use-toast";
+import { useAnalytics } from "@/hooks/useAnalytics";
 
 const contactSchema = z.object({
   name: z.string().trim().min(1, "Le nom est requis").max(100, "Le nom est trop long"),
@@ -15,6 +16,7 @@ const ContactSection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const { toast } = useToast();
+  const { trackFormSubmission, trackSocialClick } = useAnalytics();
   
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -76,6 +78,9 @@ const ContactSection = () => {
         throw new Error(`Erreur lors de l'envoi (${response.status}). Veuillez réessayer.`);
       }
 
+      // Track successful form submission
+      trackFormSubmission('contact_form', 'success');
+
       setIsSubmitted(true);
       toast({
         title: "Message envoyé !",
@@ -86,6 +91,10 @@ const ContactSection = () => {
       setErrors({});
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Une erreur inconnue s'est produite";
+      
+      // Track failed form submission
+      trackFormSubmission('contact_form', 'error', errorMessage);
+      
       console.error("Form submission error:", err);
       toast({
         title: "Erreur lors de l'envoi",
@@ -165,20 +174,29 @@ const ContactSection = () => {
                 { Icon: Linkedin, href: "https://www.linkedin.com/in/mouhadji-samba-gueye-6a3997318?utm_source=share_via&utm_content=profile&utm_medium=member_ios" },
                 { Icon: Github, href: "https://github.com/MSG-G" },
                 { Icon: Instagram, href: "https://www.instagram.com/mouhadji_s_g?igsh=MTYxMHFlejFxY2Rmbg%3D%3D&utm_source=qr" },
-              ].map((social, index) => (
-                <motion.a
-                  key={index}
-                  href={social.href}
-                  className="w-12 h-12 bg-primary/10 dark:bg-primary/20 rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-primary-foreground transition-colors duration-300"
-                  initial={{ opacity: 0, scale: 0 }}
-                  animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                  transition={{ delay: 0.6 + index * 0.1, type: "spring", stiffness: 200 }}
-                  whileHover={{ scale: 1.2, rotate: 360 }}
-                  whileTap={{ scale: 0.9 }}
-                >
-                  <social.Icon className="w-5 h-5" />
-                </motion.a>
-              ))}
+              ].map((social, index) => {
+                const platformName = social.href.includes('linkedin') ? 'LinkedIn' 
+                  : social.href.includes('github') ? 'GitHub' 
+                  : 'Instagram';
+                
+                return (
+                  <motion.a
+                    key={index}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => trackSocialClick(platformName, social.href)}
+                    className="w-12 h-12 bg-primary/10 dark:bg-primary/20 rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-primary-foreground transition-colors duration-300"
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={isInView ? { opacity: 1, scale: 1 } : {}}
+                    transition={{ delay: 0.6 + index * 0.1, type: "spring", stiffness: 200 }}
+                    whileHover={{ scale: 1.2, rotate: 360 }}
+                    whileTap={{ scale: 0.9 }}
+                  >
+                    <social.Icon className="w-5 h-5" />
+                  </motion.a>
+                );
+              })}
             </div>
           </motion.div>
 
