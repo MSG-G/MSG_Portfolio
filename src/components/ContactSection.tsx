@@ -143,7 +143,8 @@ const ContactSection = () => {
 
             <div className="space-y-6">
               {[
-                { Icon: Mail, label: "Email", value: "mouha7522@gmail.com" },
+                { Icon: Mail, label: "Email", value: "mouha7522@gmail.com", href: "mailto:mouha7522@gmail.com" },
+                { Icon: Phone, label: "Téléphone", value: "+221 77 443 11 90", href: "tel:+221774431190" },
                 { Icon: MapPin, label: "Localisation", value: "Dakar, Parcelles Assainies" },
               ].map((item, index) => (
                 <motion.div
@@ -163,7 +164,16 @@ const ContactSection = () => {
                   </motion.div>
                   <div>
                     <p className="text-sm text-muted-foreground">{item.label}</p>
-                    <p className="font-medium text-foreground">{item.value}</p>
+                    {item.href ? (
+                      <a 
+                        href={item.href}
+                        className="font-medium text-foreground hover:text-primary transition-colors"
+                      >
+                        {item.value}
+                      </a>
+                    ) : (
+                      <p className="font-medium text-foreground">{item.value}</p>
+                    )}
                   </div>
                 </motion.div>
               ))}

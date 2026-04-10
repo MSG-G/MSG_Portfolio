@@ -1,38 +1,56 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
-import { Code, Palette, Smartphone, Zap, Database, Server } from "lucide-react";
+import { Code2, Server, Database, Palette, Smartphone, Zap, GitBranch, Monitor } from "lucide-react";
 
-const skills = [
+const skillCategories = [
   {
-    icon: Code,
-    title: "Développement Web",
-    description: "React, TypeScript, TailwindCss et les technologies modernes pour créer des applications performantes.",
-  },
-  {
-    icon: Server,
-    title: "Laravel / PHP",
-    description: "Framework PHP puissant pour développer des applications web robustes et évolutives.",
-  },
-  {
-    icon: Database,
-    title: "Java",
-    description: "Langage orienté objet pour créer des applications structurées et maintenables.",
+    icon: Code2,
+    title: "Langages de Programmation",
+    color: "from-blue-500/20 to-blue-500/5",
+    skills: ["PHP", "Python", "Java", "JavaScript", "HTML/CSS"],
   },
   {
     icon: Palette,
-    title: "UI/UX Design",
-    description: "Interfaces utilisateur intuitives et esthétiques qui offrent une expérience mémorable.",
+    title: "Frameworks & Technologies",
+    color: "from-purple-500/20 to-purple-500/5",
+    skills: ["Laravel", "React", "Vue.js", "TypeScript", "JPA", "Hibernate"],
+  },
+  {
+    icon: Database,
+    title: "Bases de Données",
+    color: "from-green-500/20 to-green-500/5",
+    skills: ["MySQL", "PostgreSQL"],
+  },
+  {
+    icon: Monitor,
+    title: "Outils & Environnements",
+    color: "from-orange-500/20 to-orange-500/5",
+    skills: ["Git", "Visual Studio Code", "IntelliJ IDEA", "PhpStorm", "Android Studio"],
   },
   {
     icon: Smartphone,
-    title: "Responsive Design",
-    description: "Sites et applications qui fonctionnent parfaitement sur tous les appareils.",
+    title: "Design & Responsive",
+    color: "from-pink-500/20 to-pink-500/5",
+    skills: ["UI/UX Design", "Responsive Design", "TailwindCSS", "ShadCN", "Figma"],
   },
   {
     icon: Zap,
-    title: "Performance",
-    description: "Optimisation pour des temps de chargement rapides et une expérience fluide.",
+    title: "Méthodologies & Gestion",
+    color: "from-red-500/20 to-red-500/5",
+    skills: ["Méthodes Agile", "Gestion de Projet", "Bilan Compte de Résultat"],
+  },
+  {
+    icon: Server,
+    title: "Backend & API",
+    color: "from-cyan-500/20 to-cyan-500/5",
+    skills: ["Node.js", "Express", "REST API", "Authentication", "Security"],
+  },
+  {
+    icon: GitBranch,
+    title: "Outils Modernes",
+    color: "from-indigo-500/20 to-indigo-500/5",
+    skills: ["Vite", "Webpack", "Docker", "CI/CD", "Postman"],
   },
 ];
 
@@ -41,50 +59,104 @@ const SkillsSection = () => {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section className="py-32 px-6 bg-secondary/30" ref={ref}>
+    <section id="competences" className="py- px-6 bg-muted/30" ref={ref}>
       <div className="max-w-6xl mx-auto">
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-20"
         >
           <p className="text-primary text-sm tracking-[0.3em] uppercase mb-4">
-            Compétences
+            Compétences Techniques
           </p>
-          <h2 className="font-display text-4xl md:text-5xl font-medium">
-            Ce que je fais de mieux
+          <h2 className="font-display text-4xl md:text-5xl font-medium mb-6">
+            Tech Stack & Expertise
           </h2>
+          <p className="text-muted-foreground max-w-2xl mx-auto">
+            Une palette diversifiée de technologies et de méthodologies pour créer des solutions modernes et performantes.
+          </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {skills.map((skill, index) => (
-            <motion.div
-              key={skill.title}
-              initial={{ opacity: 0, y: 30, rotateX: -15 }}
-              animate={isInView ? { opacity: 1, y: 0, rotateX: 0 } : {}}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              whileHover={{ 
-                y: -10, 
-                boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
-                transition: { duration: 0.2 }
-              }}
-              className="bg-card p-8 rounded-2xl border border-border"
-            >
-              <motion.div 
-                className="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-6"
-                whileHover={{ rotate: 360, scale: 1.1 }}
-                transition={{ duration: 0.5 }}
+        {/* Skills Grid */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={isInView ? { opacity: 1 } : {}}
+          transition={{ staggerChildren: 0.1, delayChildren: 0.2 }}
+          className="grid md:grid-cols-2 lg:grid-cols-4 gap-6"
+        >
+          {skillCategories.map((category, index) => {
+            const IconComponent = category.icon;
+            return (
+              <motion.div
+                key={category.title}
+                initial={{ opacity: 0, scale: 0.8, y: 20 }}
+                animate={isInView ? { opacity: 1, scale: 1, y: 0 } : {}}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                whileHover={{
+                  y: -8,
+                  boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.1)",
+                }}
+                className="group"
               >
-                <skill.icon className="w-6 h-6 text-primary" />
+                <div
+                  className={`relative h-full bg-gradient-to-br ${category.color} border border-border rounded-2xl p-6 overflow-hidden`}
+                >
+                  {/* Animated background */}
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100"
+                    transition={{ duration: 0.5 }}
+                  />
+
+                  {/* Content */}
+                  <div className="relative z-10">
+                    {/* Icon */}
+                    <motion.div
+                      className="mb-4 inline-block p-2.5 bg-primary/10 rounded-lg"
+                      whileHover={{ scale: 1.15, rotate: 10 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <IconComponent className="w-5 h-5 text-primary" />
+                    </motion.div>
+
+                    {/* Title */}
+                    <h3 className="text-lg font-semibold mb-4">{category.title}</h3>
+
+                    {/* Skills */}
+                    <div className="space-y-2">
+                      {category.skills.map((skill, idx) => (
+                        <motion.div
+                          key={skill}
+                          className="flex items-center gap-2"
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={isInView ? { opacity: 1, x: 0 } : {}}
+                          transition={{
+                            duration: 0.4,
+                            delay: 0.3 + idx * 0.05,
+                          }}
+                        >
+                          <motion.span
+                            className="w-1.5 h-1.5 bg-primary rounded-full"
+                            animate={{ scale: [1, 1.2, 1] }}
+                            transition={{
+                              duration: 1.5,
+                              repeat: Infinity,
+                              delay: idx * 0.1,
+                            }}
+                          />
+                          <span className="text-sm text-muted-foreground">
+                            {skill}
+                          </span>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
               </motion.div>
-              <h3 className="font-display text-xl font-medium mb-3">{skill.title}</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                {skill.description}
-              </p>
-            </motion.div>
-          ))}
-        </div>
+            );
+          })}
+        </motion.div>
       </div>
     </section>
   );
